@@ -6,7 +6,7 @@ const { verifyToken, verifyRole } = require('../middleware/auth');
 // 1. GET ALL: Ambil Semua Data Asal Sekolah (Publik / Mahasiswa bisa lihat tanpa login)
 router.get('/', async (req, res) => {
   try {
-    const result = await pool.query('SELECT * FROM asalsekolah ORDER BY id DESC');
+    const result = await pool.query('SELECT * FROM asal_sekolah ORDER BY id DESC');
     res.json({
       status: 'success',
       data: result.rows
@@ -20,7 +20,7 @@ router.get('/', async (req, res) => {
 router.get('/:id', async (req, res) => {
   const { id } = req.params;
   try {
-    const result = await pool.query('SELECT * FROM asalsekolah WHERE id = $1', [id]);
+    const result = await pool.query('SELECT * FROM asal_sekolah WHERE id = $1', [id]);
     if (result.rows.length === 0) {
       return res.status(404).json({ message: 'Data asal sekolah tidak ditemukan' });
     }
@@ -35,7 +35,7 @@ router.get('/:id', async (req, res) => {
 
 // 3. POST: Tambah Data Asal Sekolah Baru (Khusus Admin)
 router.post('/', verifyToken, verifyRole(['admin']), async (req, res) => {
-  const { nama_sekolah, jenis_sekolah, kabupaten } = req.body;
+  const { nim, nama_mahasiswa, nama_sekolah, jenis_sekolah, kabupaten } = req.body;
 
   // Validasi opsi jenis_sekolah sesuai CHECK constraint ('SMA', 'SMK', 'MA')
   if (jenis_sekolah && !['SMA', 'SMK', 'MA'].includes(jenis_sekolah)) {
@@ -46,9 +46,9 @@ router.post('/', verifyToken, verifyRole(['admin']), async (req, res) => {
 
   try {
     const newRecord = await pool.query(
-      `INSERT INTO asalsekolah (nama_sekolah, jenis_sekolah, kabupaten)
-       VALUES ($1, $2, $3) RETURNING *`,
-      [nama_sekolah, jenis_sekolah, kabupaten]
+      `INSERT INTO asal_sekolah (nim, nama_mahasiswa, nama_sekolah, jenis_sekolah, kabupaten)
+       VALUES ($1, $2, $3, $4, $5) RETURNING *`,
+      [nim, nama_mahasiswa, nama_sekolah, jenis_sekolah, kabupaten]
     );
 
     res.status(201).json({
@@ -63,7 +63,7 @@ router.post('/', verifyToken, verifyRole(['admin']), async (req, res) => {
 // 4. PUT: Update Data Asal Sekolah Berdasarkan ID (Khusus Admin)
 router.put('/:id', verifyToken, verifyRole(['admin']), async (req, res) => {
   const { id } = req.params;
-  const { nama_sekolah, jenis_sekolah, kabupaten } = req.body;
+  const { nim, nama_mahasiswa, nama_sekolah, jenis_sekolah, kabupaten } = req.body;
 
   if (jenis_sekolah && !['SMA', 'SMK', 'MA'].includes(jenis_sekolah)) {
     return res.status(400).json({ 
@@ -73,10 +73,10 @@ router.put('/:id', verifyToken, verifyRole(['admin']), async (req, res) => {
 
   try {
     const updatedRecord = await pool.query(
-      `UPDATE asalsekolah 
-       SET nama_sekolah = $1, jenis_sekolah = $2, kabupaten = $3
-       WHERE id = $4 RETURNING *`,
-      [nama_sekolah, jenis_sekolah, kabupaten, id]
+      `UPDATE asal_sekolah 
+       SET nim = $1, nama_mahasiswa = $2, nama_sekolah = $3, jenis_sekolah = $4, kabupaten = $5
+       WHERE id = $6 RETURNING *`,
+      [nim, nama_mahasiswa, nama_sekolah, jenis_sekolah, kabupaten, id]
     );
 
     if (updatedRecord.rows.length === 0) {
@@ -96,7 +96,7 @@ router.put('/:id', verifyToken, verifyRole(['admin']), async (req, res) => {
 router.delete('/:id', verifyToken, verifyRole(['admin']), async (req, res) => {
   const { id } = req.params;
   try {
-    const result = await pool.query('DELETE FROM asalsekolah WHERE id = $1 RETURNING *', [id]);
+    const result = await pool.query('DELETE FROM asal_sekolah WHERE id = $1 RETURNING *', [id]);
     if (result.rows.length === 0) {
       return res.status(404).json({ message: 'Data tidak ditemukan' });
     }

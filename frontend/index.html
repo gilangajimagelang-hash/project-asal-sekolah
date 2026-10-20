@@ -239,46 +239,103 @@
       padding: 24px;
       box-shadow: 0 4px 20px rgba(216, 27, 96, 0.03);
       margin-bottom: 30px;
+      position: relative;
     }
 
-    /* Element Umum (Form & Button) */
+    /* Style Form Tambah Mahasiswa Ala Figma */
+    .btn-back-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      color: var(--primary);
+      font-size: 0.85rem;
+      font-weight: 600;
+      text-decoration: none;
+      margin-bottom: 20px;
+      cursor: pointer;
+    }
+
+    .badge-card-tic {
+      position: absolute;
+      top: 24px;
+      right: 24px;
+      background: #ffe3ed;
+      color: var(--primary);
+      padding: 4px 12px;
+      border-radius: 12px;
+      font-size: 0.75rem;
+      font-weight: bold;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
     .input-group {
-      margin-bottom: 16px;
+      margin-bottom: 18px;
       text-align: left;
     }
 
     .input-group label {
       display: block;
-      font-size: 0.8rem;
+      font-size: 0.85rem;
       font-weight: 600;
       margin-bottom: 6px;
+      color: var(--text-dark);
+    }
+
+    .input-group label span {
+      color: var(--primary);
     }
 
     input, select {
       width: 100%;
-      padding: 10px 14px;
+      padding: 11px 14px;
       border: 1px solid #e2d5dc;
       border-radius: 8px;
       font-size: 0.9rem;
       outline: none;
+      background: #ffffff;
+    }
+
+    input:focus, select:focus {
+      border-color: var(--primary);
+    }
+
+    .input-helper {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      margin-top: 6px;
+    }
+
+    .form-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 24px;
+      padding-top: 16px;
+      border-top: 1px solid var(--border-color);
     }
 
     .btn-pink {
       background: var(--primary);
       color: white;
       border: none;
-      padding: 10px 20px;
+      padding: 10px 24px;
       border-radius: 8px;
       font-weight: 600;
       cursor: pointer;
       font-size: 0.85rem;
     }
 
+    .btn-pink:hover {
+      background: var(--primary-hover);
+    }
+
     .btn-outline {
       background: white;
       border: 1px solid #ddd;
       color: var(--text-dark);
-      padding: 8px 16px;
+      padding: 10px 24px;
       border-radius: 8px;
       font-weight: 600;
       cursor: pointer;
@@ -369,11 +426,11 @@
         
         <form id="form-login">
           <div class="input-group">
-            <label>Username *</label>
+            <label>Username <span>*</span></label>
             <input type="text" id="login-username" placeholder="admin_tic" required>
           </div>
           <div class="input-group">
-            <label>Password *</label>
+            <label>Password <span>*</span></label>
             <input type="password" id="login-password" placeholder="••••••••" required>
           </div>
           <button type="submit" class="btn-pink" style="width: 100%; padding: 12px; margin-top: 10px;">Masuk sebagai Admin</button>
@@ -387,6 +444,8 @@
         <table>
           <thead>
             <tr>
+              <th>NIM</th>
+              <th>NAMA MAHASISWA</th>
               <th>NAMA SEKOLAH</th>
               <th>JENIS</th>
               <th>KABUPATEN</th>
@@ -446,6 +505,8 @@
           <thead>
             <tr>
               <th>NO.</th>
+              <th>NIM</th>
+              <th>NAMA MAHASISWA</th>
               <th>NAMA SEKOLAH</th>
               <th>JENIS</th>
               <th>KABUPATEN</th>
@@ -457,44 +518,68 @@
       </div>
 
       <!-- FORM TAMBAH / EDIT ADMIN -->
-      <div id="admin-page-tambah" class="card-box hidden">
+      <div id="admin-page-tambah" class="hidden">
         <h2 class="page-title" id="form-title">Tambah Mahasiswa</h2>
-        <p class="page-sub">Kelola data asal sekolah mahasiswa kelas TI C.</p>
+        <p class="page-sub">Lengkapi identitas dan asal sekolah mahasiswa baru di kelas TI C.</p>
 
-        <form id="form-sekolah" style="max-width: 600px;">
-          <input type="hidden" id="sekolah-id">
+        <a class="btn-back-link" onclick="navAdmin('daftar')">← Kembali ke daftar mahasiswa</a>
+
+        <div class="card-box">
+          <div class="badge-card-tic">🎓 TI C</div>
           
-          <div class="input-group">
-            <label>Nama Sekolah *</label>
-            <input type="text" id="nama-sekolah" placeholder="Cth: SMAN 1 Magelang" required>
-          </div>
+          <h3 style="font-size: 1.1rem; margin-bottom: 4px;">Identitas mahasiswa</h3>
+          <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 24px;">Data akan ditambahkan ke daftar kelas TI C.</p>
 
-          <div class="input-group">
-            <label>Jenis Sekolah *</label>
-            <select id="jenis-sekolah" required>
-              <option value="">Pilih Jenis Sekolah</option>
-              <option value="SMA">SMA</option>
-              <option value="SMK">SMK</option>
-              <option value="MA">MA</option>
-            </select>
-          </div>
+          <form id="form-sekolah">
+            <input type="hidden" id="sekolah-id">
+            
+            <div class="input-group">
+              <label>NIM <span>*</span></label>
+              <input type="text" id="nim" placeholder="Masukkan NIM mahasiswa" required>
+              <div class="input-helper">Contoh: 2401009. NIM tidak boleh sama dengan data lain.</div>
+            </div>
 
-          <div class="input-group">
-            <label>Kabupaten / Kota *</label>
-            <input type="text" id="kabupaten" placeholder="Cth: Kota Magelang" required>
-          </div>
+            <div class="input-group">
+              <label>Nama Mahasiswa <span>*</span></label>
+              <input type="text" id="nama-mahasiswa" placeholder="Masukkan nama lengkap mahasiswa" required>
+            </div>
 
-          <div style="display: flex; gap: 10px; margin-top: 20px;">
-            <button type="submit" id="btn-submit" class="btn-pink">Simpan Data</button>
-            <button type="button" id="btn-batal" class="btn-outline hidden" onclick="resetForm(); navAdmin('daftar');">Batal Edit</button>
-          </div>
-        </form>
+            <div class="input-group">
+              <label>Nama Sekolah <span>*</span></label>
+              <input type="text" id="nama-sekolah" placeholder="Masukkan nama asal sekolah" required>
+              <div class="input-helper">Contoh: SMA Harapan Bangsa atau SMK Teknologi Nusantara.</div>
+            </div>
+
+            <div class="input-group">
+              <label>Jenis Sekolah <span>*</span></label>
+              <select id="jenis-sekolah" required>
+                <option value="">Pilih Jenis Sekolah</option>
+                <option value="SMA">SMA</option>
+                <option value="SMK">SMK</option>
+                <option value="MA">MA</option>
+              </select>
+            </div>
+
+            <div class="input-group">
+              <label>Kabupaten / Kota <span>*</span></label>
+              <input type="text" id="kabupaten" placeholder="Masukkan kabupaten atau kota" required>
+            </div>
+
+            <div class="form-footer">
+              <div style="font-size: 0.78rem; color: var(--text-muted);">* Kolom wajib diisi</div>
+              <div style="display: flex; gap: 10px;">
+                <button type="button" class="btn-outline" onclick="resetForm(); navAdmin('daftar');">Batal</button>
+                <button type="submit" id="btn-submit" class="btn-pink">Simpan Data</button>
+              </div>
+            </div>
+          </form>
+        </div>
       </div>
     </main>
   </div>
 
   <script>
-    const API_URL = ' https://tricky-planes-grow.loca.lt';
+    const API_URL = ' https://social-meals-tap.loca.lt';
 
     const customHeaders = {
       'Content-Type': 'application/json',
@@ -505,12 +590,12 @@
       cekToken();
       ambilDataSekolah();
 
-      // Auto-select jenis sekolah berdasarkan nama
-      const inputNama = document.getElementById('nama-sekolah');
+      // Auto-select jenis sekolah berdasarkan nama sekolah
+      const inputSekolah = document.getElementById('nama-sekolah');
       const selectJenis = document.getElementById('jenis-sekolah');
 
-      inputNama.addEventListener('input', () => {
-        const teks = inputNama.value.toUpperCase();
+      inputSekolah.addEventListener('input', () => {
+        const teks = inputSekolah.value.toUpperCase();
         if (teks.includes('SMK')) selectJenis.value = 'SMK';
         else if (teks.includes('SMA')) selectJenis.value = 'SMA';
         else if (teks.includes('MA') && !teks.includes('SMK') && !teks.includes('SMA')) selectJenis.value = 'MA';
@@ -577,7 +662,7 @@
           document.getElementById('login-status').innerText = '';
           cekToken();
         } else {
-          document.getElementById('login-status').innerText = data.message || 'Username atau password salah.';
+          document.getElementById('login-status').innerText = data.message || data.error || 'Username atau password salah.';
         }
       } catch (err) {
         console.error('Error Login:', err);
@@ -608,28 +693,35 @@
         tbodyAdmin.innerHTML = '';
 
         if (!hasil.data || hasil.data.length === 0) {
-          tbodyPublic.innerHTML = `<tr><td colspan="3" style="text-align: center; color: #777;">Belum ada data sekolah.</td></tr>`;
-          tbodyAdmin.innerHTML = `<tr><td colspan="5" style="text-align: center; color: #777;">Belum ada data sekolah.</td></tr>`;
+          tbodyPublic.innerHTML = `<tr><td colspan="5" style="text-align: center; color: #777;">Belum ada data sekolah.</td></tr>`;
+          tbodyAdmin.innerHTML = `<tr><td colspan="7" style="text-align: center; color: #777;">Belum ada data sekolah.</td></tr>`;
           return;
         }
 
         hasil.data.forEach((item, index) => {
+          const nimValue = item.nim || '-';
+          const namaMhsValue = item.nama_mahasiswa || item.nama || '-';
+
           // Tabel Publik
           tbodyPublic.innerHTML += `<tr>
+            <td>${nimValue}</td>
+            <td><strong>${namaMhsValue}</strong></td>
             <td>${item.nama_sekolah}</td>
             <td>${item.jenis_sekolah}</td>
             <td>${item.kabupaten}</td>
           </tr>`;
 
-          // Tabel Admin (Dengan Sidebar & Format Nomor 01, 02)
+          // Tabel Admin
           const noFormat = String(index + 1).padStart(2, '0');
           tbodyAdmin.innerHTML += `<tr>
             <td>${noFormat}</td>
-            <td><strong>${item.nama_sekolah}</strong></td>
+            <td>${nimValue}</td>
+            <td><strong>${namaMhsValue}</strong></td>
+            <td>${item.nama_sekolah}</td>
             <td>${item.jenis_sekolah}</td>
             <td>${item.kabupaten}</td>
             <td>
-              <button class="btn-action-edit" onclick="persiapkanEdit(${item.id}, '${item.nama_sekolah}', '${item.jenis_sekolah}', '${item.kabupaten}')">✏️ Edit</button>
+              <button class="btn-action-edit" onclick="persiapkanEdit(${item.id}, '${nimValue}', '${namaMhsValue}', '${item.nama_sekolah}', '${item.jenis_sekolah}', '${item.kabupaten}')">✏️ Edit</button>
               <button class="btn-action-delete" onclick="hapusSekolah(${item.id})">🗑️ Hapus</button>
             </td>
           </tr>`;
@@ -639,10 +731,12 @@
       }
     }
 
-    // 4. SIMPAN DATA (CREATE / UPDATE)
+    // 4. SIMPAN DATA (CREATE / UPDATE) - Penanganan Error Diperbaiki di Sini
     document.getElementById('form-sekolah').addEventListener('submit', async (e) => {
       e.preventDefault();
       const id = document.getElementById('sekolah-id').value;
+      const nim = document.getElementById('nim').value;
+      const nama_mahasiswa = document.getElementById('nama-mahasiswa').value;
       const nama_sekolah = document.getElementById('nama-sekolah').value;
       let jenis_sekolah = document.getElementById('jenis-sekolah').value;
       const kabupaten = document.getElementById('kabupaten').value;
@@ -659,7 +753,7 @@
             ...customHeaders,
             'Authorization': `Bearer ${token}`
           },
-          body: JSON.stringify({ nama_sekolah, jenis_sekolah, kabupaten })
+          body: JSON.stringify({ nim, nama_mahasiswa, nama_sekolah, jenis_sekolah, kabupaten })
         });
 
         const hasil = await res.json();
@@ -668,7 +762,8 @@
           resetForm();
           navAdmin('daftar');
         } else {
-          alert('Gagal: ' + hasil.message);
+          // Diperbaiki agar membaca error dari backend (message atau error)
+          alert('Gagal: ' + (hasil.message || hasil.error || 'Terjadi kesalahan'));
         }
       } catch (err) {
         console.error(err);
@@ -677,15 +772,16 @@
     });
 
     // 5. EDIT DATA
-    function persiapkanEdit(id, nama, jenis, kabupaten) {
+    function persiapkanEdit(id, nim, namaMhs, namaSekolah, jenis, kabupaten) {
       document.getElementById('sekolah-id').value = id;
-      document.getElementById('nama-sekolah').value = nama;
+      document.getElementById('nim').value = nim === '-' ? '' : nim;
+      document.getElementById('nama-mahasiswa').value = namaMhs === '-' ? '' : namaMhs;
+      document.getElementById('nama-sekolah').value = namaSekolah;
       document.getElementById('jenis-sekolah').value = jenis;
       document.getElementById('kabupaten').value = kabupaten;
 
       document.getElementById('form-title').innerText = 'Edit Data Mahasiswa';
       document.getElementById('btn-submit').innerText = 'Update Data';
-      document.getElementById('btn-batal').classList.remove('hidden');
 
       navAdmin('tambah');
     }
@@ -696,7 +792,6 @@
       document.getElementById('form-sekolah').reset();
       document.getElementById('form-title').innerText = 'Tambah Mahasiswa';
       document.getElementById('btn-submit').innerText = 'Simpan Data';
-      document.getElementById('btn-batal').classList.add('hidden');
     }
 
     // 7. HAPUS DATA
@@ -719,7 +814,7 @@
           alert('Data berhasil dihapus!');
           ambilDataSekolah();
         } else {
-          alert('Gagal menghapus: ' + hasil.message);
+          alert('Gagal menghapus: ' + (hasil.message || hasil.error));
         }
       } catch (err) {
         console.error(err);
