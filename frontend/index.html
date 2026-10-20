@@ -1,296 +1,731 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Aplikasi Asal Sekolah</title>
-    <style>
-        body { font-family: Arial, sans-serif; margin: 30px; background-color: #f9f9f9; }
-        .card { background: white; padding: 20px; margin-bottom: 20px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
-        table { width: 100%; border-collapse: collapse; margin-top: 10px; }
-        th, td { border: 1px solid #ddd; padding: 10px; text-align: left; }
-        th { background-color: #007bff; color: white; }
-        input, select, button { padding: 8px; margin: 5px 0; width: 100%; box-sizing: border-box; }
-        button { background-color: #28a745; color: white; border: none; cursor: pointer; border-radius: 4px; }
-        button:hover { background-color: #218838; }
-        .btn-edit { background-color: #ffc107; color: black; width: auto; padding: 5px 10px; margin-right: 5px; }
-        .btn-delete { background-color: #dc3545; color: white; width: auto; padding: 5px 10px; }
-        .btn-cancel { background-color: #6c757d; color: white; width: auto; padding: 5px 10px; margin-top: 5px; }
-        .hidden { display: none; }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ruang TI C - Portal Asal Sekolah</title>
+  <style>
+    :root {
+      --primary: #d81b60;
+      --primary-hover: #b8144d;
+      --bg-light: #fff7f9;
+      --bg-white: #ffffff;
+      --text-dark: #2a1147;
+      --text-muted: #888888;
+      --border-color: #f3e2e8;
+      --sidebar-width: 250px;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    body {
+      background-color: var(--bg-light);
+      color: var(--text-dark);
+      min-height: 100vh;
+    }
+
+    /* ------------------- TAMPILAN NON-ADMIN (LANDING & LOGIN) ------------------- */
+    header.public-header {
+      background: #ffffff;
+      padding: 16px 40px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.02);
+    }
+
+    .public-container {
+      max-width: 1000px;
+      margin: 40px auto;
+      padding: 0 20px;
+    }
+
+    .hero-title {
+      font-size: 2.2rem;
+      color: var(--text-dark);
+      margin-bottom: 30px;
+      line-height: 1.2;
+    }
+
+    .card-grid {
+      display: flex;
+      gap: 20px;
+      margin-bottom: 40px;
+    }
+
+    .card-option {
+      background: white;
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      padding: 20px;
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .card-icon {
+      background: #ffe3ed;
+      color: var(--primary);
+      width: 40px;
+      height: 40px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.1rem;
+    }
+
+    .login-box {
+      background: white;
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      padding: 30px;
+      max-width: 400px;
+      margin: 40px auto;
+      text-align: center;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.02);
+    }
+
+    /* ------------------- DASHBOARD ADMIN (UI FIGMA) ------------------- */
+    .admin-wrapper {
+      display: flex;
+      min-height: 100vh;
+      background-color: var(--bg-light);
+    }
+
+    /* Sidebar */
+    aside.admin-sidebar {
+      width: var(--sidebar-width);
+      background: var(--bg-white);
+      border-right: 1px dashed var(--border-color);
+      display: flex;
+      flex-direction: column;
+      padding: 24px 20px;
+      position: fixed;
+      height: 100vh;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 40px;
+    }
+
+    .brand-icon {
+      background: var(--primary);
+      color: white;
+      padding: 8px 12px;
+      border-radius: 12px;
+      font-size: 1.1rem;
+    }
+
+    .brand-title {
+      font-weight: bold;
+      font-size: 1.05rem;
+    }
+
+    .brand-sub {
+      font-size: 0.72rem;
+      color: var(--text-muted);
+    }
+
+    .menu-label {
+      font-size: 0.7rem;
+      font-weight: bold;
+      color: var(--text-muted);
+      letter-spacing: 0.5px;
+      margin-bottom: 12px;
+      text-transform: uppercase;
+    }
+
+    .nav-menu {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      flex: 1;
+    }
+
+    .nav-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 16px;
+      border-radius: 10px;
+      text-decoration: none;
+      color: var(--text-dark);
+      font-size: 0.9rem;
+      font-weight: 500;
+      cursor: pointer;
+    }
+
+    .nav-item.active {
+      background: #ffe8f0;
+      color: var(--primary);
+      font-weight: bold;
+    }
+
+    .nav-logout {
+      color: #d32f2f;
+      margin-top: auto;
+    }
+
+    /* Main Area Admin */
+    main.admin-main {
+      margin-left: var(--sidebar-width);
+      flex: 1;
+      padding: 30px 40px;
+    }
+
+    .top-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 30px;
+    }
+
+    .breadcrumb {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+    }
+
+    .breadcrumb span {
+      color: var(--text-dark);
+      font-weight: 600;
+    }
+
+    .badge-info {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .badge-tag {
+      background: #ffe3ed;
+      color: var(--primary);
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-size: 0.8rem;
+      font-weight: bold;
+    }
+
+    .badge-year {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+    }
+
+    .page-title {
+      font-size: 1.8rem;
+      color: var(--text-dark);
+      margin-bottom: 4px;
+    }
+
+    .page-sub {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      margin-bottom: 24px;
+    }
+
+    .card-box {
+      background: var(--bg-white);
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      padding: 24px;
+      box-shadow: 0 4px 20px rgba(216, 27, 96, 0.03);
+      margin-bottom: 30px;
+    }
+
+    /* Element Umum (Form & Button) */
+    .input-group {
+      margin-bottom: 16px;
+      text-align: left;
+    }
+
+    .input-group label {
+      display: block;
+      font-size: 0.8rem;
+      font-weight: 600;
+      margin-bottom: 6px;
+    }
+
+    input, select {
+      width: 100%;
+      padding: 10px 14px;
+      border: 1px solid #e2d5dc;
+      border-radius: 8px;
+      font-size: 0.9rem;
+      outline: none;
+    }
+
+    .btn-pink {
+      background: var(--primary);
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 8px;
+      font-weight: 600;
+      cursor: pointer;
+      font-size: 0.85rem;
+    }
+
+    .btn-outline {
+      background: white;
+      border: 1px solid #ddd;
+      color: var(--text-dark);
+      padding: 8px 16px;
+      border-radius: 8px;
+      font-weight: 600;
+      cursor: pointer;
+      font-size: 0.85rem;
+    }
+
+    /* Table Dashboard */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 10px;
+    }
+
+    th {
+      text-align: left;
+      padding: 14px;
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      border-bottom: 1px solid var(--border-color);
+      text-transform: uppercase;
+    }
+
+    td {
+      padding: 14px;
+      border-bottom: 1px solid var(--border-color);
+      font-size: 0.88rem;
+    }
+
+    .btn-action-edit {
+      color: #0288d1;
+      background: none;
+      border: none;
+      cursor: pointer;
+      font-weight: bold;
+      margin-right: 12px;
+    }
+
+    .btn-action-delete {
+      color: #d32f2f;
+      background: none;
+      border: none;
+      cursor: pointer;
+      font-weight: bold;
+    }
+
+    .hidden { display: none !important; }
+  </style>
 </head>
 <body>
 
-    <h2>Manajemen Asal Sekolah</h2>
+  <!-- ==================== AREA PUBLIK / NON-ADMIN ==================== -->
+  <div id="section-publik">
+    <header class="public-header">
+      <div style="display: flex; align-items: center; gap: 12px; font-weight: bold;">
+        <div style="background: var(--primary); color: white; padding: 6px 10px; border-radius: 10px;">🎓</div>
+        <div>Ruang TI C</div>
+      </div>
+      <button class="btn-outline" onclick="showLogin()">🔒 Login Admin</button>
+    </header>
 
-    <!-- BAGIAN 1: FORM LOGIN ADMIN -->
-    <div class="card" id="section-login">
-        <h3>Login Admin</h3>
-        <form id="form-login">
-            <input type="text" id="login-username" placeholder="Username Admin" required>
-            <input type="password" id="login-password" placeholder="Password" required>
-            <button type="submit">Login</button>
-        </form>
-        <p id="login-status" style="color: red;"></p>
-    </div>
+    <div class="public-container">
+      <!-- HERO LANDING -->
+      <div id="landing-hero">
+        <h1 class="hero-title">Kenali asal sekolah<br>mahasiswa TI C.</h1>
+        <div class="card-grid">
+          <div class="card-option">
+            <div>
+              <strong>Untuk admin</strong>
+              <p style="font-size: 0.8rem; color: var(--text-muted);">Kelola, tambah, dan perbarui data mahasiswa.</p>
+            </div>
+            <button class="btn-pink" onclick="showLogin()">🔒 Login Admin</button>
+          </div>
+          <div class="card-option">
+            <div>
+              <strong>Untuk mahasiswa</strong>
+              <p style="font-size: 0.8rem; color: var(--text-muted);">Jelajahi data asal sekolah tanpa perlu login.</p>
+            </div>
+            <button class="btn-outline" onclick="scrollKeTabelPublic()">👁️ Lihat Data Mahasiswa</button>
+          </div>
+        </div>
+      </div>
 
-    <!-- BAGIAN 2: FORM TAMBAH / EDIT DATA (Hanya muncul setelah login) -->
-    <div class="card hidden" id="section-tambah">
-        <h3 id="form-title">Tambah Asal Sekolah Baru</h3>
-        <button onclick="logout()" style="background-color: #dc3545; width: auto; padding: 5px 10px; float: right;">Logout</button>
+      <!-- FORM LOGIN -->
+      <div id="public-login-box" class="login-box hidden">
+        <div class="card-icon" style="margin: 0 auto 15px auto;">🔒</div>
+        <h2>Selamat datang, Admin.</h2>
+        <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 20px;">Masuk untuk mengelola data asal sekolah mahasiswa kelas TI C.</p>
         
-        <form id="form-sekolah">
-            <!-- Hidden input untuk menyimpan ID saat mode Edit -->
-            <input type="hidden" id="sekolah-id">
-            
-            <input type="text" id="nama-sekolah" placeholder="Nama Sekolah (cth: SMAN 1 Teladan)" required>
-            <select id="jenis-sekolah" required>
-                <option value="">Pilih Jenis Sekolah</option>
-                <option value="SMA">SMA</option>
-                <option value="SMK">SMK</option>
-                <option value="MA">MA</option>
-            </select>
-            <input type="text" id="kabupaten" placeholder="Kabupaten" required>
-            
-            <button type="submit" id="btn-submit">Simpan Data</button>
-            <button type="button" id="btn-batal" class="btn-cancel hidden" onclick="resetForm()">Batal Edit</button>
+        <form id="form-login">
+          <div class="input-group">
+            <label>Username *</label>
+            <input type="text" id="login-username" placeholder="admin_tic" required>
+          </div>
+          <div class="input-group">
+            <label>Password *</label>
+            <input type="password" id="login-password" placeholder="••••••••" required>
+          </div>
+          <button type="submit" class="btn-pink" style="width: 100%; padding: 12px; margin-top: 10px;">Masuk sebagai Admin</button>
         </form>
-    </div>
+        <p id="login-status" style="color: red; font-size: 0.8rem; margin-top: 10px;"></p>
+      </div>
 
-    <!-- BAGIAN 3: TABEL DAFTAR SEKOLAH -->
-    <div class="card">
-        <h3>Daftar Asal Sekolah</h3>
+      <!-- TABEL PUBLIK (MAHASISWA) -->
+      <div class="card-box" id="public-tabel-box">
+        <h3>Daftar Asal Sekolah Mahasiswa</h3>
         <table>
-            <thead>
-                <tr>
-                    <th>Nama Sekolah</th>
-                    <th>Jenis</th>
-                    <th>Kabupaten</th>
-                    <th id="th-aksi" class="hidden">Aksi</th>
-                </tr>
-            </thead>
-            <tbody id="tabel-data">
-                <!-- Data akan masuk otomatis dari backend -->
-            </tbody>
+          <thead>
+            <tr>
+              <th>NAMA SEKOLAH</th>
+              <th>JENIS</th>
+              <th>KABUPATEN</th>
+            </tr>
+          </thead>
+          <tbody id="tabel-data-public"></tbody>
         </table>
+      </div>
     </div>
+  </div>
 
-    <script>
-        // Menggunakan IP Laptop kamu agar bisa diakses oleh teman (frontend)
-        const API_URL = 'https://bumpy-signs-turn.loca.lt';
 
-        // Cek status login dan ambil data saat halaman dibuka
-        document.addEventListener("DOMContentLoaded", () => {
-            cekToken();
-            ambilDataSekolah();
+  <!-- ==================== DASHBOARD ADMIN (FIGMA DESAIN) ==================== -->
+  <div id="section-admin" class="admin-wrapper hidden">
+    <!-- Sidebar -->
+    <aside class="admin-sidebar">
+      <div class="brand">
+        <div class="brand-icon">🎓</div>
+        <div>
+          <div class="brand-title">Ruang TI C</div>
+          <div class="brand-sub">Portal asal sekolah mahasiswa</div>
+        </div>
+      </div>
 
-            // SENSOR OTOMATIS: Saat mengetik Nama Sekolah, otomatis pilih Jenis Sekolah
-            const inputNama = document.getElementById('nama-sekolah');
-            const selectJenis = document.getElementById('jenis-sekolah');
+      <div class="menu-label">Menu Admin</div>
+      <div class="nav-menu">
+        <a class="nav-item active" id="nav-daftar" onclick="navAdmin('daftar')">
+          <span>👤</span> Daftar Mahasiswa
+        </a>
+        <a class="nav-item" id="nav-tambah" onclick="navAdmin('tambah')">
+          <span>➕</span> Tambah Mahasiswa
+        </a>
+        <a class="nav-item nav-logout" onclick="logout()">
+          <span>🚪</span> Logout
+        </a>
+      </div>
+    </aside>
 
-            inputNama.addEventListener('input', () => {
-                const teks = inputNama.value.toUpperCase();
-                
-                if (teks.includes('SMK')) {
-                    selectJenis.value = 'SMK';
-                } else if (teks.includes('SMA')) {
-                    selectJenis.value = 'SMA';
-                } else if (teks.includes('MA') && !teks.includes('SMK') && !teks.includes('SMA')) {
-                    selectJenis.value = 'MA';
-                }
-            });
+    <!-- Main Content -->
+    <main class="admin-main">
+      <div class="top-header">
+        <div class="breadcrumb">
+          📁 Ruang admin &nbsp;›&nbsp; <span id="admin-breadcrumb">Daftar Mahasiswa</span>
+        </div>
+        <div class="badge-info">
+          <span class="badge-tag">Kelas TI C</span>
+          <span class="badge-year">Tahun akademik 2026/2027</span>
+        </div>
+      </div>
+
+      <!-- TABEL DAFTAR MAHASISWA ADMIN -->
+      <div id="admin-page-daftar" class="card-box">
+        <h2 class="page-title">Daftar Mahasiswa</h2>
+        <p class="page-sub">Kelola data asal sekolah mahasiswa kelas TI C.</p>
+
+        <table>
+          <thead>
+            <tr>
+              <th>NO.</th>
+              <th>NAMA SEKOLAH</th>
+              <th>JENIS</th>
+              <th>KABUPATEN</th>
+              <th>AKSI</th>
+            </tr>
+          </thead>
+          <tbody id="tabel-data-admin"></tbody>
+        </table>
+      </div>
+
+      <!-- FORM TAMBAH / EDIT ADMIN -->
+      <div id="admin-page-tambah" class="card-box hidden">
+        <h2 class="page-title" id="form-title">Tambah Mahasiswa</h2>
+        <p class="page-sub">Kelola data asal sekolah mahasiswa kelas TI C.</p>
+
+        <form id="form-sekolah" style="max-width: 600px;">
+          <input type="hidden" id="sekolah-id">
+          
+          <div class="input-group">
+            <label>Nama Sekolah *</label>
+            <input type="text" id="nama-sekolah" placeholder="Cth: SMAN 1 Magelang" required>
+          </div>
+
+          <div class="input-group">
+            <label>Jenis Sekolah *</label>
+            <select id="jenis-sekolah" required>
+              <option value="">Pilih Jenis Sekolah</option>
+              <option value="SMA">SMA</option>
+              <option value="SMK">SMK</option>
+              <option value="MA">MA</option>
+            </select>
+          </div>
+
+          <div class="input-group">
+            <label>Kabupaten / Kota *</label>
+            <input type="text" id="kabupaten" placeholder="Cth: Kota Magelang" required>
+          </div>
+
+          <div style="display: flex; gap: 10px; margin-top: 20px;">
+            <button type="submit" id="btn-submit" class="btn-pink">Simpan Data</button>
+            <button type="button" id="btn-batal" class="btn-outline hidden" onclick="resetForm(); navAdmin('daftar');">Batal Edit</button>
+          </div>
+        </form>
+      </div>
+    </main>
+  </div>
+
+  <script>
+    const API_URL = ' https://tricky-planes-grow.loca.lt';
+
+    const customHeaders = {
+      'Content-Type': 'application/json',
+      'bypass-tunnel-reminder': 'true'
+    };
+
+    document.addEventListener("DOMContentLoaded", () => {
+      cekToken();
+      ambilDataSekolah();
+
+      // Auto-select jenis sekolah berdasarkan nama
+      const inputNama = document.getElementById('nama-sekolah');
+      const selectJenis = document.getElementById('jenis-sekolah');
+
+      inputNama.addEventListener('input', () => {
+        const teks = inputNama.value.toUpperCase();
+        if (teks.includes('SMK')) selectJenis.value = 'SMK';
+        else if (teks.includes('SMA')) selectJenis.value = 'SMA';
+        else if (teks.includes('MA') && !teks.includes('SMK') && !teks.includes('SMA')) selectJenis.value = 'MA';
+      });
+    });
+
+    function cekToken() {
+      const token = localStorage.getItem('admin_token');
+      if (token) {
+        document.getElementById('section-publik').classList.add('hidden');
+        document.getElementById('section-admin').classList.remove('hidden');
+        navAdmin('daftar');
+      } else {
+        document.getElementById('section-publik').classList.remove('hidden');
+        document.getElementById('section-admin').classList.add('hidden');
+      }
+    }
+
+    function showLogin() {
+      document.getElementById('landing-hero').classList.add('hidden');
+      document.getElementById('public-login-box').classList.remove('hidden');
+    }
+
+    function scrollKeTabelPublic() {
+      document.getElementById('public-tabel-box').scrollIntoView({ behavior: 'smooth' });
+    }
+
+    function navAdmin(halaman) {
+      document.getElementById('admin-page-daftar').classList.add('hidden');
+      document.getElementById('admin-page-tambah').classList.add('hidden');
+      document.getElementById('nav-daftar').classList.remove('active');
+      document.getElementById('nav-tambah').classList.remove('active');
+
+      if (halaman === 'daftar') {
+        document.getElementById('admin-page-daftar').classList.remove('hidden');
+        document.getElementById('nav-daftar').classList.add('active');
+        document.getElementById('admin-breadcrumb').innerText = 'Daftar Mahasiswa';
+        ambilDataSekolah();
+      } else if (halaman === 'tambah') {
+        document.getElementById('admin-page-tambah').classList.remove('hidden');
+        document.getElementById('nav-tambah').classList.add('active');
+        document.getElementById('admin-breadcrumb').innerText = 'Tambah Mahasiswa';
+      }
+    }
+
+    // 1. LOGIN ADMIN
+    document.getElementById('form-login').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const username = document.getElementById('login-username').value;
+      const password = document.getElementById('login-password').value;
+
+      try {
+        const res = await fetch(`${API_URL}/api/auth/login`, {
+          method: 'POST',
+          headers: customHeaders,
+          body: JSON.stringify({ username, password })
         });
 
-        function cekToken() {
-            const token = localStorage.getItem('admin_token');
-            const thAksi = document.getElementById('th-aksi');
+        const data = await res.json();
 
-            if (token) {
-                document.getElementById('section-login').classList.add('hidden');
-                document.getElementById('section-tambah').classList.remove('hidden');
-                if (thAksi) thAksi.classList.remove('hidden');
-            } else {
-                document.getElementById('section-login').classList.remove('hidden');
-                document.getElementById('section-tambah').classList.add('hidden');
-                if (thAksi) thAksi.classList.add('hidden');
-            }
+        if (res.ok) {
+          localStorage.setItem('admin_token', data.token);
+          alert('Login Berhasil sebagai Admin!');
+          document.getElementById('login-status').innerText = '';
+          cekToken();
+        } else {
+          document.getElementById('login-status').innerText = data.message || 'Username atau password salah.';
+        }
+      } catch (err) {
+        console.error('Error Login:', err);
+        document.getElementById('login-status').innerText = 'Gagal terhubung ke backend. Pastikan server & LocalTunnel aktif.';
+      }
+    });
+
+    // 2. LOGOUT
+    function logout() {
+      localStorage.removeItem('admin_token');
+      alert('Berhasil Logout');
+      resetForm();
+      cekToken();
+    }
+
+    // 3. GET DATA SEKOLAH
+    async function ambilDataSekolah() {
+      try {
+        const res = await fetch(`${API_URL}/api/asal-sekolah`, {
+          headers: { 'bypass-tunnel-reminder': 'true' }
+        });
+        const hasil = await res.json();
+        
+        const tbodyPublic = document.getElementById('tabel-data-public');
+        const tbodyAdmin = document.getElementById('tabel-data-admin');
+
+        tbodyPublic.innerHTML = '';
+        tbodyAdmin.innerHTML = '';
+
+        if (!hasil.data || hasil.data.length === 0) {
+          tbodyPublic.innerHTML = `<tr><td colspan="3" style="text-align: center; color: #777;">Belum ada data sekolah.</td></tr>`;
+          tbodyAdmin.innerHTML = `<tr><td colspan="5" style="text-align: center; color: #777;">Belum ada data sekolah.</td></tr>`;
+          return;
         }
 
-        // 1. PROSES LOGIN
-        document.getElementById('form-login').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const username = document.getElementById('login-username').value;
-            const password = document.getElementById('login-password').value;
+        hasil.data.forEach((item, index) => {
+          // Tabel Publik
+          tbodyPublic.innerHTML += `<tr>
+            <td>${item.nama_sekolah}</td>
+            <td>${item.jenis_sekolah}</td>
+            <td>${item.kabupaten}</td>
+          </tr>`;
 
-            try {
-                const res = await fetch(`${API_URL}/api/auth/login`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ username, password })
-                });
-                const data = await res.json();
+          // Tabel Admin (Dengan Sidebar & Format Nomor 01, 02)
+          const noFormat = String(index + 1).padStart(2, '0');
+          tbodyAdmin.innerHTML += `<tr>
+            <td>${noFormat}</td>
+            <td><strong>${item.nama_sekolah}</strong></td>
+            <td>${item.jenis_sekolah}</td>
+            <td>${item.kabupaten}</td>
+            <td>
+              <button class="btn-action-edit" onclick="persiapkanEdit(${item.id}, '${item.nama_sekolah}', '${item.jenis_sekolah}', '${item.kabupaten}')">✏️ Edit</button>
+              <button class="btn-action-delete" onclick="hapusSekolah(${item.id})">🗑️ Hapus</button>
+            </td>
+          </tr>`;
+        });
+      } catch (err) {
+        console.error('Gagal mengambil data:', err);
+      }
+    }
 
-                if (res.ok) {
-                    localStorage.setItem('admin_token', data.token);
-                    alert('Login Berhasil sebagai Admin!');
-                    document.getElementById('login-status').innerText = '';
-                    cekToken();
-                    ambilDataSekolah();
-                } else {
-                    document.getElementById('login-status').innerText = data.message || 'Login gagal';
-                }
-            } catch (err) {
-                console.error(err);
-                alert('Gagal terhubung ke server backend.');
-            }
+    // 4. SIMPAN DATA (CREATE / UPDATE)
+    document.getElementById('form-sekolah').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const id = document.getElementById('sekolah-id').value;
+      const nama_sekolah = document.getElementById('nama-sekolah').value;
+      let jenis_sekolah = document.getElementById('jenis-sekolah').value;
+      const kabupaten = document.getElementById('kabupaten').value;
+      const token = localStorage.getItem('admin_token');
+
+      const isEdit = id !== '';
+      const endpoint = isEdit ? `${API_URL}/api/asal-sekolah/${id}` : `${API_URL}/api/asal-sekolah`;
+      const method = isEdit ? 'PUT' : 'POST';
+
+      try {
+        const res = await fetch(endpoint, {
+          method: method,
+          headers: { 
+            ...customHeaders,
+            'Authorization': `Bearer ${token}`
+          },
+          body: JSON.stringify({ nama_sekolah, jenis_sekolah, kabupaten })
         });
 
-        // 2. LOGOUT
-        function logout() {
-            localStorage.removeItem('admin_token');
-            alert('Berhasil Logout');
-            resetForm();
-            cekToken();
-            ambilDataSekolah();
+        const hasil = await res.json();
+        if (res.ok) {
+          alert(isEdit ? 'Data berhasil diperbarui!' : 'Data asal sekolah berhasil ditambahkan!');
+          resetForm();
+          navAdmin('daftar');
+        } else {
+          alert('Gagal: ' + hasil.message);
         }
+      } catch (err) {
+        console.error(err);
+        alert('Terjadi kesalahan saat menyimpan data.');
+      }
+    });
 
-        // 3. AMBIL DATA SEKOLAH (GET)
-        async function ambilDataSekolah() {
-            try {
-                const res = await fetch(`${API_URL}/api/asal-sekolah`);
-                const hasil = await res.json();
-                const tbody = document.getElementById('tabel-data');
-                const token = localStorage.getItem('admin_token');
-                
-                tbody.innerHTML = '';
+    // 5. EDIT DATA
+    function persiapkanEdit(id, nama, jenis, kabupaten) {
+      document.getElementById('sekolah-id').value = id;
+      document.getElementById('nama-sekolah').value = nama;
+      document.getElementById('jenis-sekolah').value = jenis;
+      document.getElementById('kabupaten').value = kabupaten;
 
-                if (!hasil.data || hasil.data.length === 0) {
-                    const colspan = token ? 4 : 3;
-                    tbody.innerHTML = `<tr><td colspan="${colspan}" style="text-align: center; color: #777;">Belum ada data sekolah.</td></tr>`;
-                    return;
-                }
+      document.getElementById('form-title').innerText = 'Edit Data Mahasiswa';
+      document.getElementById('btn-submit').innerText = 'Update Data';
+      document.getElementById('btn-batal').classList.remove('hidden');
 
-                hasil.data.forEach(item => {
-                    let aksiTd = '';
-                    if (token) {
-                        aksiTd = `<td>
-                            <button class="btn-edit" onclick="persiapkanEdit(${item.id}, '${item.nama_sekolah}', '${item.jenis_sekolah}', '${item.kabupaten}')">Edit</button>
-                            <button class="btn-delete" onclick="hapusSekolah(${item.id})">Hapus</button>
-                        </td>`;
-                    }
+      navAdmin('tambah');
+    }
 
-                    tbody.innerHTML += `<tr>
-                        <td>${item.nama_sekolah}</td>
-                        <td>${item.jenis_sekolah}</td>
-                        <td>${item.kabupaten}</td>
-                        ${aksiTd}
-                    </tr>`;
-                });
-            } catch (err) {
-                console.error('Gagal mengambil data:', err);
-            }
-        }
+    // 6. RESET FORM
+    function resetForm() {
+      document.getElementById('sekolah-id').value = '';
+      document.getElementById('form-sekolah').reset();
+      document.getElementById('form-title').innerText = 'Tambah Mahasiswa';
+      document.getElementById('btn-submit').innerText = 'Simpan Data';
+      document.getElementById('btn-batal').classList.add('hidden');
+    }
 
-        // 4. SIMPAN DATA (CREATE / UPDATE dengan Konfirmasi Validasi)
-        document.getElementById('form-sekolah').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const id = document.getElementById('sekolah-id').value;
-            const nama_sekolah = document.getElementById('nama-sekolah').value;
-            let jenis_sekolah = document.getElementById('jenis-sekolah').value;
-            const kabupaten = document.getElementById('kabupaten').value;
-            const token = localStorage.getItem('admin_token');
+    // 7. HAPUS DATA
+    async function hapusSekolah(id) {
+      if (!confirm('Apakah Anda yakin ingin menghapus data ini?')) return;
 
-            // VALIDASI SINGKRONISASI
-            const namaUpper = nama_sekolah.toUpperCase();
-            if (namaUpper.includes('SMA') && jenis_sekolah !== 'SMA') {
-                if (confirm(`Nama sekolah berisi "SMA", tapi Jenis dipilih "${jenis_sekolah}". Ubah jenis sekolah menjadi "SMA"?`)) {
-                    jenis_sekolah = 'SMA';
-                    document.getElementById('jenis-sekolah').value = 'SMA';
-                }
-            } else if (namaUpper.includes('SMK') && jenis_sekolah !== 'SMK') {
-                if (confirm(`Nama sekolah berisi "SMK", tapi Jenis dipilih "${jenis_sekolah}". Ubah jenis sekolah menjadi "SMK"?`)) {
-                    jenis_sekolah = 'SMK';
-                    document.getElementById('jenis-sekolah').value = 'SMK';
-                }
-            }
+      const token = localStorage.getItem('admin_token');
 
-            const isEdit = id !== '';
-            const endpoint = isEdit ? `${API_URL}/api/asal-sekolah/${id}` : `${API_URL}/api/asal-sekolah`;
-            const method = isEdit ? 'PUT' : 'POST';
-
-            try {
-                const res = await fetch(endpoint, {
-                    method: method,
-                    headers: { 
-                        'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${token}`
-                    },
-                    body: JSON.stringify({ nama_sekolah, jenis_sekolah, kabupaten })
-                });
-
-                const hasil = await res.json();
-                if (res.ok) {
-                    alert(isEdit ? 'Data berhasil diperbarui!' : 'Data asal sekolah berhasil ditambahkan!');
-                    resetForm();
-                    ambilDataSekolah();
-                } else {
-                    alert('Gagal: ' + hasil.message);
-                }
-            } catch (err) {
-                console.error(err);
-                alert('Terjadi kesalahan saat menyimpan data.');
-            }
+      try {
+        const res = await fetch(`${API_URL}/api/asal-sekolah/${id}`, {
+          method: 'DELETE',
+          headers: { 
+            'bypass-tunnel-reminder': 'true',
+            'Authorization': `Bearer ${token}`
+          }
         });
 
-        // 5. EDIT DATA
-        function persiapkanEdit(id, nama, jenis, kabupaten) {
-            document.getElementById('sekolah-id').value = id;
-            document.getElementById('nama-sekolah').value = nama;
-            document.getElementById('jenis-sekolah').value = jenis;
-            document.getElementById('kabupaten').value = kabupaten;
-
-            document.getElementById('form-title').innerText = 'Edit Asal Sekolah';
-            document.getElementById('btn-submit').innerText = 'Update Data';
-            document.getElementById('btn-batal').classList.remove('hidden');
-            
-            window.scrollTo({ top: 0, behavior: 'smooth' });
+        const hasil = await res.json();
+        if (res.ok) {
+          alert('Data berhasil dihapus!');
+          ambilDataSekolah();
+        } else {
+          alert('Gagal menghapus: ' + hasil.message);
         }
-
-        // 6. RESET FORM
-        function resetForm() {
-            document.getElementById('sekolah-id').value = '';
-            document.getElementById('form-sekolah').reset();
-            document.getElementById('form-title').innerText = 'Tambah Asal Sekolah Baru';
-            document.getElementById('btn-submit').innerText = 'Simpan Data';
-            document.getElementById('btn-batal').classList.add('hidden');
-        }
-
-        // 7. HAPUS DATA (DELETE)
-        async function hapusSekolah(id) {
-            if (!confirm('Apakah Anda yakin ingin menghapus data ini?')) return;
-
-            const token = localStorage.getItem('admin_token');
-
-            try {
-                const res = await fetch(`${API_URL}/api/asal-sekolah/${id}`, {
-                    method: 'DELETE',
-                    headers: { 
-                        'Authorization': `Bearer ${token}`
-                    }
-                });
-
-                const hasil = await res.json();
-                if (res.ok) {
-                    alert('Data berhasil dihapus!');
-                    ambilDataSekolah();
-                } else {
-                    alert('Gagal menghapus: ' + hasil.message);
-                }
-            } catch (err) {
-                console.error(err);
-                alert('Terjadi kesalahan saat menghapus data.');
-            }
-        }
-    </script>
+      } catch (err) {
+        console.error(err);
+        alert('Terjadi kesalahan saat menghapus data.');
+      }
+    }
+  </script>
 </body>
 </html>
